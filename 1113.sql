@@ -53,3 +53,33 @@ on u.purchase_date between p.start_date and p.end_date
 and p.product_id = u.product_id
 group by p.product_id 
 
+
+--sql 1174 immediate food delivery II
+--wrong: the left join will keep the lines from the left table. so if the right table and find a line that matchs the criteria of the "on ...", it will be all null,
+--and mysql will choose the first line from the group of the line. finally it fails. 
+select a.*
+from delivery a
+left join delivery b
+on a.customer_id = b.customer_id
+and datediff(a.order_date, b.order_date) < 0
+group by a.customer_id  ;
+
+--solution: this solution is based from the wrong version. it finds the null lines from table, you can check the criteria.
+select round(avg(order_date=customer_pref_delivery_date) * 100, 2) as immediate_percentage
+from(
+select a.*
+from delivery a
+left join delivery b
+on a.customer_id = b.customer_id
+and a.order_date > b.order_date 
+where b.order_date is null) c;
+
+--sql 2356 
+--remeber to use DISTINCT 
+
+--sql 1114
+--solution: between can't be used in select syntex, it is only be used in where as a critira.  and remeber the between contains both begin value and end value.
+select activity_date  as day, count(distinct user_id) as active_users
+from activity
+where activity_date between date_sub('2019-07-27', interval 29 day) and '2019-07-27' --notice the function date_sub
+group by activity_date;
