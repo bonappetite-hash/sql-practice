@@ -49,3 +49,8 @@ select customer_id
 from customer
 group by customer_id
 having count(distinct product_key) = (select count(*) from product);
+
+this is a practice for sed
+also for printf
+i'm tired
+I need to sleep
